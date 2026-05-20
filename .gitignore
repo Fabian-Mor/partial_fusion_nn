@@ -1,0 +1,78 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# --- Distribution / packaging ---
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+ENV/
+
+# --- Editors / IDEs ---
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# --- Claude Code session files ---
+.claude/
+
+# --- Datasets (downloaded automatically by torchvision) ---
+data/
+experiments/data/
+*.tar.gz
+
+# --- Model checkpoints and trained weights ---
+saved/
+saved_compression/
+experiments/saved/
+experiments/saved_compression/
+*.checkpoint
+*.pth
+*.pt
+*.ckpt
+
+# --- Experiment outputs / results ---
+results/
+ralph_results/
+fisher_results/
+experiments/results/
+experiments/results_ens_compression/
+experiments/appendix_experiments/figures_homogeneous/
+experiments/appendix_experiments/figures_vgg11/
+*.pickle
+*.pkl
+*.npy
+*.npz
+*.json
+*.tex
+
+# --- Generated figures ---
+*.pdf
+*.png
+!doc/**/*.png
+!doc/**/*.pdf
+
+# --- Logs ---
+*.log
+nohup.out
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- pytest / coverage ---
+.pytest_cache/
+.coverage
+htmlcov/
