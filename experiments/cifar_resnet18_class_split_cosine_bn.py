@@ -144,6 +144,7 @@ def main():
         d = r['acc_after_ft'] - best_single_ft
         print(f"{alpha:<7} {r['acc_before_ft']:>7.2f}% {r['acc_after_ft']:>8.2f}% {r['param_ratio_nonzero']:>8.2f}x {d:>+12.2f}%", flush=True)
 
+    os.makedirs(RESULTS_DIR, exist_ok=True)
     out_path = os.path.join(RESULTS_DIR, "cifar_resnet18_class_split_cosine_bn.json")
     def clean(d):
         if isinstance(d, dict): return {k: clean(v) for k, v in d.items()}

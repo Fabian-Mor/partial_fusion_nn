@@ -1,18 +1,8 @@
 name: partial_fusion
 channels:
-  - pytorch
   - conda-forge
-  - defaults
 dependencies:
   - python=3.11
-  - numpy=1.26.*
-  - scipy=1.11.*
-  - scikit-learn=1.2.*
-  - matplotlib=3.8.*
-  - seaborn=0.12.*
-  - joblib=1.2.*
   - pip
   - pip:
-      - torch>=2.6.0
-      - torchvision>=0.21.0
-      - pot>=0.9.3            # Python Optimal Transport (import ot)
+      - -r requirements.txt

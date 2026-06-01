@@ -313,6 +313,7 @@ def main():
         print(f"{alpha:<7} {r['widened_params']:>13,} {r['fused_nz_params']:>10,} "
               f"{r['widened_post_ft']:>8.2f}% {r['fusion_post_ft_ref']:>9.2f}% {diff:>+7.2f}%", flush=True)
 
+    os.makedirs(RESULTS_DIR, exist_ok=True)
     out_path = os.path.join(RESULTS_DIR, "cifar_resnet18_class_split_random_widen.json")
     def clean(d):
         if isinstance(d, dict): return {k: clean(v) for k, v in d.items()}

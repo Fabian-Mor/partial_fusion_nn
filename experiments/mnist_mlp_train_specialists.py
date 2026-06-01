@@ -1,9 +1,8 @@
-from src.FusionModel.generalized_pruning.pruning_mlp import *
-### BELOW: NON-CNN ###
 import sys
-import torch
-
 sys.path.append("../")
+
+import torch
+from src.FusionModel.generalized_pruning.pruning_mlp import *
 from src import data_loader
 from src.MLP import Deep_MLP
 
@@ -23,9 +22,9 @@ if not JUST_TEST:
             for act in [0, 1, 2]:  # 0 is Relu, 1 is LeakyRelu, 2 is Gelu
                 model_a = Deep_MLP(hidden_size_1=size_h[0], hidden_size_2=size_h[1], hidden_size_3=size_h[2], which_act=act)
                 model_a.train_model(general_train_loader, epochs=N_EPOCHS)
-                model_a.save_model('saved_compression/'+str(seed)+'deepmlpmnist_general_'+str(size_h)+'_'+str(act)+'.checkpoint')
+                model_a.save_model('saved/'+str(seed)+'deepmlpmnist_general_'+str(size_h)+'_'+str(act)+'.checkpoint')
                 model_b = Deep_MLP(hidden_size_1=size_h[0], hidden_size_2=size_h[1], hidden_size_3=size_h[2],
                                    which_act=act)
                 model_b.train_model(specific_train_loader, epochs=N_EPOCHS)
                 model_b.save_model(
-                    'saved_compression/' + str(seed) + 'deepmlpmnist_specific_' + str(size_h) + '_' + str(act) + '.checkpoint')
+                    'saved/' + str(seed) + 'deepmlpmnist_specific_' + str(size_h) + '_' + str(act) + '.checkpoint')

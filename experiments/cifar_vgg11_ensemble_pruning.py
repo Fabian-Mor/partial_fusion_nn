@@ -15,7 +15,7 @@ np.random.seed(0)
 torch.random.manual_seed(0)
 
 SPECIALIST = 0
-seeds = [0, 1, 2, 3, 4]
+seeds = [0]  # only 2 VGG11 baselines (seeds 0,1) shipped → 1 pair (uses indices 2*seed, 2*seed+1)
 alphas = [0.0, 0.2, 0.4, 0.5, 0.6, 0.8]
 lambdas = [0.2, 0.8]
 USE_IMP = True
@@ -23,8 +23,8 @@ which_algo = 'stoch_very_high'  # 'stoch', 'stoch_high', 'stoch_very_high', 'red
 
 features = ''  # if empty then same as 'act', otherwise 'both' or 'weight_based'
 
-os.makedirs('results_ens_compression', exist_ok=True)
-save_path = 'results_ens_compression/cnn' + str(seeds) +'_' + str(alphas) + '_' + str(0) + '_' + str(USE_IMP) + '_' + str(which_algo) + features
+os.makedirs('results', exist_ok=True)
+save_path = 'results/ens_cnn' + str(seeds) +'_' + str(alphas) + '_' + str(0) + '_' + str(USE_IMP) + '_' + str(which_algo) + features
 model_size = [64, 128, 256, 256, 512, 512, 512, 512]
 print(save_path)
 
@@ -51,9 +51,9 @@ for i_seed, seed in enumerate(seeds):
     model_a = VGG11()
     model_b = VGG11()
     model_a.load_state_dict(
-        torch.load('saved_compression/' + str(2*seed) + 'VGG11_' + str(model_size) + '_best.checkpoint'))
+        torch.load('saved/' + str(2*seed) + 'VGG11_' + str(model_size) + '_best.checkpoint'))
     model_b.load_state_dict(
-        torch.load('saved_compression/' + str(2*seed+1) + 'VGG11_' + str(model_size) + '_best.checkpoint'))
+        torch.load('saved/' + str(2*seed+1) + 'VGG11_' + str(model_size) + '_best.checkpoint'))
     model_a.test_model(test_loader)
     model_b.test_model(test_loader)
     model_ens = FusionModel(model_a, model_b, PartialFusion(alphas=1), lambdas=lambdas)

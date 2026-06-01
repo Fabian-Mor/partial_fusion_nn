@@ -114,16 +114,18 @@ acc_as = []
 acc_bs = []
 acc_trains = []
 
-for i in range(5):
+num_seeds = 1 if CNN else 5  # only 2 VGG11 baselines (seeds 0,1) shipped → 1 pair
+
+for i in range(num_seeds):
 
     if CNN:
         model_size = [64, 128, 256, 256, 512, 512, 512, 512]
         model_a = VGG11()
         model_b = VGG11()
         model_a.load_state_dict(
-            torch.load('saved_compression/' + str(2 * i) + 'VGG11_' + str(model_size) + '_best.checkpoint'))
+            torch.load('saved/' + str(2 * i) + 'VGG11_' + str(model_size) + '_best.checkpoint'))
         model_b.load_state_dict(
-            torch.load('saved_compression/' + str(2 * i + 1) + 'VGG11_' + str(model_size) + '_best.checkpoint'))
+            torch.load('saved/' + str(2 * i + 1) + 'VGG11_' + str(model_size) + '_best.checkpoint'))
     else:
         model_a = Deep_MLP(hidden_size_1=100, hidden_size_2=100, hidden_size_3=100, which_act=act) #Deep_MLP()
         model_b = Deep_MLP(hidden_size_1=100, hidden_size_2=100, hidden_size_3=100, which_act=act) #Deep_MLP()
@@ -135,11 +137,11 @@ for i in range(5):
             model_b.save_model(f'saved/model_b_{i}')
         else:
             if SPECIALIST:
-                model_b.load_model('saved_compression/'+str(i)+'deepmlpmnist_general_'+str([100, 100, 100])+'_'+str(act)+'.checkpoint') #model_a.load_model(f'saved/model_a_{i}')
-                model_a.load_model('saved_compression/'+str(i)+'deepmlpmnist_specific_'+str([100, 100, 100])+'_'+str(act)+'.checkpoint') #model_b.load_model(f'saved/model_b_{i}')
+                model_b.load_model('saved/'+str(i)+'deepmlpmnist_general_'+str([100, 100, 100])+'_'+str(act)+'.checkpoint') #model_a.load_model(f'saved/model_a_{i}')
+                model_a.load_model('saved/'+str(i)+'deepmlpmnist_specific_'+str([100, 100, 100])+'_'+str(act)+'.checkpoint') #model_b.load_model(f'saved/model_b_{i}')
             else:
-                model_a.load_model('saved_compression/' + str(2*i) + 'deepmlpmnist_' + str([100, 100, 100]) + '_' + str(act) + '.checkpoint')
-                model_b.load_model('saved_compression/' + str(2*i+1) + 'deepmlpmnist_' + str([100, 100, 100]) + '_' + str(act) + '.checkpoint')
+                model_a.load_model('saved/' + str(2*i) + 'deepmlpmnist_' + str([100, 100, 100]) + '_' + str(act) + '.checkpoint')
+                model_b.load_model('saved/' + str(2*i+1) + 'deepmlpmnist_' + str([100, 100, 100]) + '_' + str(act) + '.checkpoint')
 
     test_a = model_a.test_model(test_loader, criterion=criterion)
     test_b = model_b.test_model(test_loader, criterion=criterion)

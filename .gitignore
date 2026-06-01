@@ -36,9 +36,8 @@ experiments/data/
 
 # --- Model checkpoints and trained weights ---
 saved/
-saved_compression/
 experiments/saved/
-experiments/saved_compression/
+experiments/saved_models/
 *.checkpoint
 *.pth
 *.pt
@@ -46,10 +45,7 @@ experiments/saved_compression/
 
 # --- Experiment outputs / results ---
 results/
-ralph_results/
-fisher_results/
 experiments/results/
-experiments/results_ens_compression/
 experiments/appendix_experiments/figures_homogeneous/
 experiments/appendix_experiments/figures_vgg11/
 *.pickle

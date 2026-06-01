@@ -8,14 +8,16 @@ from src.FusionModel.generalized_pruning.pruning_cnn import *
 np.random.seed(0)
 torch.random.manual_seed(0)
 
-seeds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+seeds = [0, 1]  # only 2 VGG11 baselines (seeds 0,1) shipped
 mults = [1, 0.9, 0.8, 0.6, 0.4, 0.2, 0.1]
 USE_IMP = False
 which_algo = 'stoch_very_high'
 
 features = ''  # if empty then same as 'act', otherwise 'both' or 'weight_based'
 
-save_path = 'saved_compression/cnn'+str(seeds)+'_'+str(mults)+'_'+str(USE_IMP)+'_'+str(which_algo)+features
+import os
+os.makedirs('results', exist_ok=True)
+save_path = 'results/cnn'+str(seeds)+'_'+str(mults)+'_'+str(USE_IMP)+'_'+str(which_algo)+features
 
 model_size = [64, 128, 256, 256, 512, 512, 512, 512]
 
@@ -37,7 +39,7 @@ for i_seed, seed in enumerate(seeds):
     test_data = torch.cat(test_data, dim=0)[:1000]
 
     model_h = VGG11(manual_chanel_sizes=model_size)
-    model_h.load_state_dict(torch.load('saved_compression/' + str(seed) + 'VGG11_' + str(model_size) + '_best.checkpoint'))
+    model_h.load_state_dict(torch.load('saved/' + str(seed) + 'VGG11_' + str(model_size) + '_best.checkpoint'))
     print(model_h)
 
     model_h.test_model(test_loader)

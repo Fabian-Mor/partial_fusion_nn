@@ -19,7 +19,7 @@ source .venv/bin/activate    # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-Requirements: Python 3.11, PyTorch ≥ 2.6, CUDA-capable GPU recommended for the CNN/ResNet experiments.
+Requirements: Python 3.11, PyTorch 2.2.1 + torchvision 0.17.1 (pinned in `requirements.txt`), CUDA-capable GPU recommended for the CNN/ResNet experiments. The `environment.yml` only provisions Python + pip and then defers to `requirements.txt`, so the conda and venv installs are identical.
 
 ## Datasets
 
@@ -29,8 +29,8 @@ MNIST and CIFAR-10 are downloaded automatically by `torchvision` the first time 
 
 The fusion and pruning experiments load pre-trained source models. Re-training all of them from scratch takes a long time on a single GPU, so we host the full set of checkpoints (~1.1 GB) on Zenodo:
 
-> **Download:** <https://zenodo.org/records/20306973> (`partial_fusion_checkpoints.tar.gz`, ~995 MB)
-> **SHA-256:** `28a8a6818803085056dc70c903689ed8bc4e1690fc4803931ee1d242e8f31156`
+> **Download:** <https://zenodo.org/records/20486343> (`partial_fusion_checkpoints.tar.gz`, ~1.1 GB)
+> **SHA-256:** `134fda6a4d98afd58a24d91aec8d62dbbc4400c8a376cf45aebbbb339eb05e1a`
 
 After downloading `partial_fusion_checkpoints.tar.gz`, extract it inside the `experiments/` directory so that its contents end up at `experiments/saved/` and `experiments/saved_models/`:
 
@@ -44,6 +44,10 @@ The archive is laid out so that the file paths inside it match exactly what the 
 - **`saved/resnet18_a_{0..10}.checkpoint`** / **`resnet18_b_{0..10}.checkpoint`** — 11 independently-seeded ResNet18 pairs on CIFAR-10 used by `cifar_resnet18_partial_fusion.py`.
 - **`saved/resnet18_evenodd_{a,b}.checkpoint`** — class-split specialists for the two `cifar_resnet18_class_split_*.py` scripts.
 - **`saved/mlp_capacity_{a,b}_h{25,50,100,200,400}_s{0..4}.checkpoint`** — 50 Deep_MLPs across the full capacity sweep used by `mnist_mlp_capacity_sweep.py` (and seed 0 / hidden 100 is also used by `mnist_mlp_git_rebasin_baseline.py`).
+- **`saved/{0..9}deepmlpmnist_[100, 100, 100]_2.checkpoint`** — 10 independently-seeded Deep_MLPs (GELU, hidden [100,100,100]) on MNIST. Used by `partial_fusion_sweep.py` (non-specialist mode), `mnist_mlp_ensemble_pruning.py` (non-specialist mode), and `single_model_pruning_sweep.py` (MLP mode).
+- **`saved/{0..9}deepmlpmnist_[100, 100, 100]_0.checkpoint`** — same as above but with ReLU activation. Used by `mnist_mlp_seed_pruning.py`.
+- **`saved/{0..4}deepmlpmnist_general_[100, 100, 100]_2.checkpoint`** / **`saved/{0..4}deepmlpmnist_specific_[100, 100, 100]_2.checkpoint`** — specialist MLP pairs (general = full MNIST, specific = digit-4 biased) used by `partial_fusion_sweep.py` (specialist mode, default) and `mnist_mlp_ensemble_pruning.py` (specialist mode, default).
+- **`saved/{0,1}VGG11_[64, 128, 256, 256, 512, 512, 512, 512]_best.checkpoint`** — 2 independently-seeded VGG11 baselines on CIFAR-10. Used by `partial_fusion_sweep.py` (CNN mode), `single_model_pruning_sweep.py` (CNN mode), `cifar_vgg11_seed_pruning.py`, and `cifar_vgg11_ensemble_pruning.py`. Seed counts in those scripts have been set to match the shipped baselines; bump them and re-train if you want larger error bars on the VGG11 ablations.
 - **`saved_models/best_{a,b}.checkpoint`** — VGG11 checkpoints used by the appendix channel-similarity analysis.
 
 If you'd rather train everything yourself, skip the download and run the pretraining utilities in `experiments/` (see the section below); the experiment scripts also train missing source models on demand.
@@ -100,7 +104,7 @@ python <script_name>.py
 
 ### Pretraining utilities
 
-These scripts produce the model checkpoints that the downstream fusion and pruning experiments load. They write to `experiments/saved_compression/` (or, for the ResNet18 experiments, to `experiments/saved/`).
+These scripts produce the model checkpoints that the downstream fusion and pruning experiments load. They write to `experiments/saved/`.
 
 - **`mnist_mlp_train_baselines.py`** — Trains `Deep_MLP` models on a 10% subset of MNIST across uniform hidden widths (100, 120, …, 200), producing single-model baselines and characterising the MLP capacity–accuracy curve.
 - **`cifar_vgg11_train_baselines.py`** — Trains VGG11 models on CIFAR-10 with channel-width multipliers from 0.9× down to 0.1×, producing the single-model VGG11 reference checkpoints used by the pruning experiments.

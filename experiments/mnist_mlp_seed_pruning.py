@@ -1,3 +1,4 @@
+import os
 import sys
 from matplotlib import pyplot as plt
 
@@ -16,7 +17,8 @@ USE_IMP = False
 which_algo = 'stoch_very_high'
 features = ''  # if empty then same as 'act', otherwise 'both' or 'weight_based'
 
-save_path = 'saved_compression/'+str(seeds)+'_'+str(mults)+'_'+str(act)+'_'+str(USE_IMP)+'_'+str(which_algo)+features
+os.makedirs('results', exist_ok=True)
+save_path = 'results/'+str(seeds)+'_'+str(mults)+'_'+str(act)+'_'+str(USE_IMP)+'_'+str(which_algo)+features
 
 print(save_path)
 
@@ -39,7 +41,7 @@ for i_seed, seed in enumerate(seeds):
     large_size = [100, 100, 100]
 
     model_a = Deep_MLP(hidden_size_1=large_size[0], hidden_size_2=large_size[1], hidden_size_3=large_size[2], which_act=act)
-    model_a.load_model('saved_compression/' + str(seed) + 'deepmlpmnist_' + str(large_size) +'_'+str(act) + '.checkpoint')
+    model_a.load_model('saved/' + str(seed) + 'deepmlpmnist_' + str(large_size) +'_'+str(act) + '.checkpoint')
     for mult in mults:
 
         small_size = [int(np.round(mult*l)) for l in large_size]

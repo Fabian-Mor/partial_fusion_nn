@@ -2,7 +2,6 @@ import sys
 import copy
 import torch
 import matplotlib as mpl
-from fontTools.misc.cython import returns
 
 mpl.rcParams['figure.dpi'] = 300
 import numpy as np
@@ -42,12 +41,14 @@ retrain_epochs=100
 
 mults = [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
 
-for i in range(5):
+num_seeds = 2 if CNN else 5  # only 2 VGG11 baselines (seeds 0,1) shipped
+
+for i in range(num_seeds):
     if CNN:
         model_size = [64, 128, 256, 256, 512, 512, 512, 512]
         model = VGG11()
         model.load_state_dict(
-            torch.load('saved_compression/' + str(i) + 'VGG11_' + str(model_size) + '_best.checkpoint'))
+            torch.load('saved/' + str(i) + 'VGG11_' + str(model_size) + '_best.checkpoint'))
     else:
         model_size = [100, 100, 100]
         model = Deep_MLP(hidden_size_1=100, hidden_size_2=100, hidden_size_3=100, which_act=act)
@@ -56,7 +57,7 @@ for i in range(5):
 
             model.save_model(f'saved/model_{i}')
         else:
-            model.load_model('saved_compression/' + str(i) + 'deepmlpmnist_' + str([100, 100, 100]) + '_' + str(
+            model.load_model('saved/' + str(i) + 'deepmlpmnist_' + str([100, 100, 100]) + '_' + str(
                         act) + '.checkpoint')
 
     test_a = model.test_model(test_loader, criterion=criterion)

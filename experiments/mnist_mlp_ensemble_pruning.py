@@ -24,8 +24,8 @@ which_algo = 'stoch_very_high'
 
 features = ''  # if empty then same as 'act', otherwise 'both' or 'weight_based'
 
-os.makedirs('results_ens_compression', exist_ok=True)
-save_path = 'results_ens_compression/' + str(seeds) +'_' + str(alphas) + '_' + str(act) + '_' + str(USE_IMP) + '_' + str(which_algo) + features
+os.makedirs('results', exist_ok=True)
+save_path = 'results/ens_' + str(seeds) +'_' + str(alphas) + '_' + str(act) + '_' + str(USE_IMP) + '_' + str(which_algo) + features
 print(save_path)
 
 list_prune = []
@@ -59,19 +59,19 @@ for i_seed, seed in enumerate(seeds):
                         hidden_size_3=large_size[2], which_act=act)
     if SPECIALIST:
         if ACT_SAVE:
-            model_a.load_model('saved_compression/' + str(seed) + 'deepmlpmnist_general_' + str(large_size) + '_' + str(act) + '.checkpoint')
-            model_b.load_model('saved_compression/' + str(seed) + 'deepmlpmnist_specific_' + str(large_size) + '_' + str(act) + '.checkpoint')
+            model_a.load_model('saved/' + str(seed) + 'deepmlpmnist_general_' + str(large_size) + '_' + str(act) + '.checkpoint')
+            model_b.load_model('saved/' + str(seed) + 'deepmlpmnist_specific_' + str(large_size) + '_' + str(act) + '.checkpoint')
         else:
-            model_a.load_model('saved_compression/' + str(seed) + 'deepmlpmnist_general_' + str(large_size) + '.checkpoint')
-            model_b.load_model('saved_compression/' + str(seed) + 'deepmlpmnist_specific_' + str(large_size) + '.checkpoint')
+            model_a.load_model('saved/' + str(seed) + 'deepmlpmnist_general_' + str(large_size) + '.checkpoint')
+            model_b.load_model('saved/' + str(seed) + 'deepmlpmnist_specific_' + str(large_size) + '.checkpoint')
 
     else:
         if ACT_SAVE:
-            model_a.load_model('saved_compression/' + str(2*seed) + 'deepmlpmnist_' + str(large_size) +'_'+str(act) + '.checkpoint')
-            model_b.load_model('saved_compression/' + str(2*seed+1) + 'deepmlpmnist_' + str(large_size) +'_'+str(act) + '.checkpoint')
+            model_a.load_model('saved/' + str(2*seed) + 'deepmlpmnist_' + str(large_size) +'_'+str(act) + '.checkpoint')
+            model_b.load_model('saved/' + str(2*seed+1) + 'deepmlpmnist_' + str(large_size) +'_'+str(act) + '.checkpoint')
         else:
-            model_a.load_model('saved_compression/' + str(2*seed) + 'deepmlpmnist_' + str(large_size) + '.checkpoint')
-            model_b.load_model('saved_compression/' + str(2*seed+1) + 'deepmlpmnist_' + str(large_size) + '.checkpoint')
+            model_a.load_model('saved/' + str(2*seed) + 'deepmlpmnist_' + str(large_size) + '.checkpoint')
+            model_b.load_model('saved/' + str(2*seed+1) + 'deepmlpmnist_' + str(large_size) + '.checkpoint')
 
     acc_a = model_a.test_model(test_loader)
     acc_b = model_b.test_model(test_loader)
